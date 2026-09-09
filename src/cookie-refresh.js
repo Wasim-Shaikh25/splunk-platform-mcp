@@ -19,8 +19,10 @@ import { CONFIG } from "./config.js";
  *    browser round-trip). When the session is truly expired, a human must run the
  *    `splunk_login` tool again.
  *
- * Interval is configurable via SPLUNK_KEEPALIVE_SECONDS (default 240s = 4 min).
- * Set SPLUNK_KEEPALIVE_SECONDS=0 to disable.
+ * Interval is configurable via SPLUNK_KEEPALIVE_SECONDS (default 120s = 2 min).
+ * Set SPLUNK_KEEPALIVE_SECONDS=0 to disable. After a failed ping the loop retries
+ * quickly (SPLUNK_KEEPALIVE_RETRY_SECONDS, default 15s) instead of waiting a full
+ * interval, so a transient blip cannot let the session quietly age out.
  */
 
 let timer = null;
@@ -28,9 +30,16 @@ let consecutiveFailures = 0;
 let staleCookieDeleted = false;
 
 function intervalMs() {
-  const raw = parseInt(process.env.SPLUNK_KEEPALIVE_SECONDS || "240", 10);
-  const secs = Number.isFinite(raw) ? raw : 240;
+  const raw = parseInt(process.env.SPLUNK_KEEPALIVE_SECONDS || "120", 10);
+  const secs = Number.isFinite(raw) ? raw : 120;
   return secs <= 0 ? 0 : Math.max(30, secs) * 1000;
+}
+
+/** Fast retry delay after a failed ping (keeps the session warm despite a blip). */
+function retryMs() {
+  const raw = parseInt(process.env.SPLUNK_KEEPALIVE_RETRY_SECONDS || "15", 10);
+  const secs = Number.isFinite(raw) && raw > 0 ? raw : 15;
+  return Math.max(5, secs) * 1000;
 }
 
 /** Consecutive auth failures before the stale cookie file is hard-deleted. Default 3; 0 disables. */
@@ -41,6 +50,9 @@ function staleCookieThreshold() {
 
 async function pingOnce() {
   try {
+    // Hit an authenticated endpoint that Splunk counts as real user activity so the
+    // session's inactivity timer is reset (not just a cached read). current-context is
+    // the canonical "who am I" call and refreshes the web session on the proxy tier.
     await getJson("/services/authentication/current-context?count=1");
     if (consecutiveFailures > 0) {
       console.error("[splunk-mcp] Session keep-alive recovered — REST is responding again.");
@@ -99,18 +111,26 @@ export function startCookieKeepAlive() {
     console.error("[splunk-mcp] Session keep-alive disabled (SPLUNK_KEEPALIVE_SECONDS=0).");
     return;
   }
-  console.error(`[splunk-mcp] Session keep-alive every ${ms / 1000}s (SSO cookies).`);
-  // First ping shortly after start, then on the interval.
-  timer = setInterval(() => {
-    void pingOnce();
-  }, ms);
-  if (typeof timer.unref === "function") timer.unref(); // don't keep the process alive just for this
-  setTimeout(() => void pingOnce(), 3000).unref?.();
+  console.error(
+    `[splunk-mcp] Session keep-alive every ${ms / 1000}s (SSO cookies), fast-retry ${retryMs() / 1000}s after a miss.`
+  );
+  // Self-scheduling loop: ping now, then reschedule based on success/failure.
+  // On success wait the full interval; on failure retry quickly so a single miss
+  // can't let the session lapse before the next attempt.
+  const tick = async () => {
+    const ok = await pingOnce();
+    const next = ok ? ms : retryMs();
+    timer = setTimeout(tick, next);
+    if (typeof timer.unref === "function") timer.unref();
+  };
+  // Fire the first ping almost immediately.
+  timer = setTimeout(tick, 1000);
+  if (typeof timer.unref === "function") timer.unref();
 }
 
 export function stopCookieKeepAlive() {
   if (timer) {
-    clearInterval(timer);
+    clearTimeout(timer);
     timer = null;
   }
 }
