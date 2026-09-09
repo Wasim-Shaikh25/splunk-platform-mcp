@@ -2,7 +2,7 @@ import { chromium } from "playwright";
 import fs from "fs";
 import path from "path";
 import { CONFIG } from "./config.js";
-import { withCookieFileLockSync } from "./cookie-lock.js";
+import { withCookieFileLockSync, deleteCookieFileSync } from "./cookie-lock.js";
 import { buildLoginToolResultText, logSsoFallbackToStderr } from "./sso-login-messages.js";
 
 /**
@@ -85,6 +85,12 @@ async function splunkSessionLooksReady(page) {
  */
 export async function loginWithSSO() {
   fs.mkdirSync(path.dirname(CONFIG.COOKIE_FILE), { recursive: true });
+
+  // Force-delete any existing/stale cookie before a fresh login so the new session
+  // is never mixed with or shadowed by a prior one.
+  if (deleteCookieFileSync(CONFIG.COOKIE_FILE)) {
+    console.error(`[splunk-mcp] Removed existing cookie file before re-login: ${CONFIG.COOKIE_FILE}`);
+  }
 
   const browser = await chromium.launch({ headless: false });
   let ready = false;
