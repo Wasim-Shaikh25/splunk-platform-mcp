@@ -1,0 +1,42 @@
+{
+  "name": "splunk-dashboard-mcp",
+  "version": "0.1.0",
+  "description": "Model Context Protocol server for Splunk dashboards: browser SSO cookies (or auth token) for the management REST API. Reads existing dashboards (Dashboard Studio JSON + Classic Simple XML), checks your edit access before updating, and always creates new dashboards under your own profile. Mandates a documentation-first workflow for authoring SPL and dashboard definitions.",
+  "type": "module",
+  "engines": {
+    "node": ">=18"
+  },
+  "bin": "src/index.js",
+  "files": [
+    "src",
+    "scripts",
+    "tests",
+    ".env.example",
+    "README.md"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "splunk",
+    "dashboard",
+    "dashboard-studio",
+    "cursor",
+    "kiro",
+    "sso"
+  ],
+  "scripts": {
+    "start": "node src/index.js",
+    "login": "node scripts/splunk-login.mjs",
+    "test": "node --test tests/",
+    "validate": "node scripts/validate.mjs",
+    "install-browser": "node ./node_modules/playwright/cli.js install chromium"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "1.0.0",
+    "node-fetch": "3.3.2",
+    "playwright": "1.43.0"
+  }
+}

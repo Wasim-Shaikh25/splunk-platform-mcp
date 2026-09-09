@@ -1,0 +1,6 @@
+.env
+cookies/
+node_modules/
+*.log
+tests/
+.kiro/
