@@ -131,10 +131,10 @@ npm test                    # unit tests (format detection, docs gate)
 
 ## npm
 
-Package name: **`splunk-platform-mcp`**. Install or run via MCP:
+Package name: **`@svasimahmed283/splunk-platform-mcp`**. Install or run via MCP:
 
 ```json
-"args": ["-y", "splunk-platform-mcp@0.1.2"]
+"args": ["-y", "@svasimahmed283/splunk-platform-mcp@0.1.2"]
 ```
 
 Repository: [Wasim-Shaikh25/splunk-platform-mcp](https://github.com/Wasim-Shaikh25/splunk-platform-mcp).

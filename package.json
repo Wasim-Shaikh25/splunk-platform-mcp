@@ -1,5 +1,5 @@
 {
-  "name": "splunk-platform-mcp",
+  "name": "@svasimahmed283/splunk-platform-mcp",
   "version": "0.1.2",
   "description": "Model Context Protocol server for Splunk: SPL search, dashboards (Studio + Classic), reports, and alerts via management REST—browser SSO cookies, ACL-aware reads/writes, documentation-first authoring.",
   "type": "module",
