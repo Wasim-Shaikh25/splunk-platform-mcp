@@ -1,19 +1,30 @@
 {
-  "name": "splunk-dashboard-mcp",
-  "version": "0.1.1",
-  "description": "Model Context Protocol server for Splunk dashboards: browser SSO cookies (or auth token) for the management REST API. Reads existing dashboards (Dashboard Studio JSON + Classic Simple XML), checks your edit access before updating, and always creates new dashboards under your own profile. Mandates a documentation-first workflow for authoring SPL and dashboard definitions.",
+  "name": "splunk-platform-mcp",
+  "version": "0.1.2",
+  "description": "Model Context Protocol server for Splunk: SPL search, dashboards (Studio + Classic), reports, and alerts via management REST—browser SSO cookies, ACL-aware reads/writes, documentation-first authoring.",
   "type": "module",
   "engines": {
     "node": ">=18"
   },
-  "bin": "src/index.js",
+  "bin": {
+    "splunk-platform-mcp": "./src/index.js"
+  },
   "files": [
     "src",
     "scripts",
     "tests",
     ".env.example",
-    "README.md"
+    "README.md",
+    "CHANGELOG.md"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Wasim-Shaikh25/splunk-platform-mcp.git"
+  },
+  "homepage": "https://github.com/Wasim-Shaikh25/splunk-platform-mcp#readme",
+  "bugs": {
+    "url": "https://github.com/Wasim-Shaikh25/splunk-platform-mcp/issues"
+  },
   "publishConfig": {
     "access": "public"
   },
@@ -21,8 +32,10 @@
     "mcp",
     "model-context-protocol",
     "splunk",
+    "splunk-enterprise",
     "dashboard",
     "dashboard-studio",
+    "spl",
     "cursor",
     "kiro",
     "sso"

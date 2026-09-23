@@ -2,6 +2,12 @@
 
 All notable changes to this project are documented here.
 
+## 0.1.2
+
+### Changed
+
+- **Renamed** npm package and MCP server to **`splunk-platform-mcp`** (legacy: `splunk-dashboard-mcp`). GitHub repo: **`Wasim-Shaikh25/splunk-platform-mcp`**. Steering doc: **`splunk-platform-authoring.md`**.
+
 ## 0.1.1
 
 ### Changed

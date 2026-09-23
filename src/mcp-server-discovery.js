@@ -12,7 +12,12 @@ import path from "path";
  */
 export function findMcpServerEnvForEntryScript(
   entryScriptAbsolute,
-  legacyServerKeys = ["splunk-dashboard", "splunk-dashboard-mcp"],
+  legacyServerKeys = [
+    "splunk-platform",
+    "splunk-platform-mcp",
+    "splunk-dashboard",
+    "splunk-dashboard-mcp",
+  ],
   preferredKeyEnvVar = "SPLUNK_MCP_SERVER_KEY"
 ) {
   const markerNorm = path.normalize(path.resolve(entryScriptAbsolute)).toLowerCase();

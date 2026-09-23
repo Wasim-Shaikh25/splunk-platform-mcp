@@ -28,7 +28,7 @@ import {
 import { startCookieKeepAlive } from "./cookie-refresh.js";
 
 const server = new Server(
-  { name: "splunk-dashboard-mcp", version: "0.1.0" },
+  { name: "splunk-platform-mcp", version: "0.1.2" },
   { capabilities: { tools: {} } }
 );
 

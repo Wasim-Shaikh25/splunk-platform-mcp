@@ -5,7 +5,7 @@ inclusion: always
 # Splunk Dashboard Authoring — Documentation First (Mandatory)
 
 This steering governs any work that authors SPL or Splunk dashboard definitions
-through the `splunk-dashboard-mcp` server. It is a hard requirement, not a
+through the `splunk-platform-mcp` server. It is a hard requirement, not a
 suggestion, and exists to protect accuracy: SPL commands, Dashboard Studio JSON,
 and Classic Simple XML all have version-specific rules that must not be guessed.
 

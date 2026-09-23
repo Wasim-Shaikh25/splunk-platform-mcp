@@ -1,4 +1,4 @@
-# splunk-dashboard-mcp
+# splunk-platform-mcp
 
 A Model Context Protocol (MCP) server for **reading and building Splunk dashboards**.
 It talks to the Splunk management REST API (`data/ui/views`) as *you* — via browser
@@ -73,7 +73,7 @@ another window is picked up with no restart.
 Any agent using this server must read the relevant [Splunk docs](https://docs.splunk.com/)
 before writing SPL or a dashboard definition, then pass `docsConsulted: true` (and a
 `docsReference`) to the write tools. The tools refuse writes without it. See
-`.kiro/steering/splunk-dashboard-authoring.md`. This protects accuracy — SPL and the
+`.kiro/steering/splunk-platform-authoring.md`. This protects accuracy — SPL and the
 dashboard schemas are version-specific and must not be guessed.
 
 ## Setup
@@ -98,9 +98,9 @@ SSO in the window that opens.
 ```json
 {
   "mcpServers": {
-    "splunk-dashboard": {
+    "splunk-platform": {
       "command": "node",
-      "args": ["c:/MCP Projects/splunk-dashboard-mcp/src/index.js"],
+      "args": ["c:/MCP Projects/splunk-platform-mcp/src/index.js"],
       "env": {
         "SPLUNK_BASE_URL": "https://splunk.example.com"
       }
@@ -128,3 +128,13 @@ npm test                    # unit tests (format detection, docs gate)
   tools surface that clearly rather than failing with a raw 403.
 - New dashboards are created private (owned by you). Change sharing in Splunk if
   others need access.
+
+## npm
+
+Package name: **`splunk-platform-mcp`**. Install or run via MCP:
+
+```json
+"args": ["-y", "splunk-platform-mcp@0.1.2"]
+```
+
+Repository: [Wasim-Shaikh25/splunk-platform-mcp](https://github.com/Wasim-Shaikh25/splunk-platform-mcp).
